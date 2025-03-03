@@ -33,6 +33,10 @@ public class Utilisateur {
     // Constructeur par défaut
     public Utilisateur() {}
 
+    public Utilisateur(String email, String motdepasse) {
+        this.emailU=email;
+        this.motdepasse=motdepasse;
+    }
     public Integer getNumU(){
         return numU;
     }
@@ -57,14 +61,9 @@ public class Utilisateur {
     public void setEmail(String mail) {
         this.emailU=mail;
     }
-    public enum NotificationType{
-        notifWeb,notifemail
-    }
-
-
-
     @Override
     public String toString() {
-        return "Utilisateur nomU='" + nomU + "', prenomU='" + prenomU + "', emailU='" + emailU + "'}";
-    }}
+        return "Utilisateur nomU='" + nomU + "', prenomU='" + prenomU + "', emailU='" + emailU + "', motDepasse='" + motdepasse+"'}";
+    }
+}
 

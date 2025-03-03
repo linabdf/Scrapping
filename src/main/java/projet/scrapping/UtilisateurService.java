@@ -1,23 +1,22 @@
 package projet.scrapping;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.AbstractDriverBasedDataSource;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.sql.*;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+
 
 @Service
 public class UtilisateurService {
 
     @Autowired
     private final UtilisateurRepository utilisateurRepository;
+
     @Autowired
     public UtilisateurService(UtilisateurRepository utilisateurRepository) {
         this.utilisateurRepository = utilisateurRepository;
@@ -136,9 +135,32 @@ public class UtilisateurService {
             Utilisateur savedUtilisateur = utilisateurRepository.save(utilisateur);
             utilisateurRepository.flush();
             System.out.println("Utilisateur inséré avec succès DANS LA BASE : " + savedUtilisateur);
+          //  Utilisateur fetchedUtilisateur = utilisateurRepository.findByEmail("suusuusuusuus");
+            //List<Utilisateur> utilisateurs = utilisateurRepository.findAll();
+            //System.out.println("Liste des utilisateur" + utilisateurs);
+            /*if (fetchedUtilisateur != null) {
+                System.out.println("Utilisateur récupéré : " + fetchedUtilisateur);
+            } else {
+                System.out.println("Utilisateur non trouvé dans la base de données.");
+            }*/
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de l'insertion de l'utilisateur.");
+        }
+    }
+
+    @Transactional
+    public void ConnecterUtilisateur(String nomU, String prenom, String email, String motDePasse) {
+        Utilisateur utilisateur = new Utilisateur(nomU, prenom, email, motDePasse);
+        System.out.println("Utilisateur à insérer : " + utilisateur);
+
+        try {
+            Utilisateur savedUtilisateur = utilisateurRepository.save(utilisateur);
+            utilisateurRepository.flush();
+            System.out.println("Utilisateur inséré avec succès DANS LA BASE : " + savedUtilisateur);
             Utilisateur fetchedUtilisateur = utilisateurRepository.findByEmail("suusuusuusuus");
-            List<Utilisateur> utilisateurs=utilisateurRepository.findAll();
-            System.out.println("Liste des utilisateur"+utilisateurs);
+            List<Utilisateur> utilisateurs = utilisateurRepository.findAll();
+            System.out.println("Liste des utilisateur" + utilisateurs);
             if (fetchedUtilisateur != null) {
                 System.out.println("Utilisateur récupéré : " + fetchedUtilisateur);
             } else {
@@ -148,11 +170,31 @@ public class UtilisateurService {
             e.printStackTrace();
             System.out.println("Erreur lors de l'insertion de l'utilisateur.");
         }
-
-
     }
 
+    @Transactional
+    public Map<String, String> connecterUtilisateur(String email, String motdepasse) {
+        Map<String, String> response = new HashMap<>();
 
+        Optional<Utilisateur> utilisateur = Optional.ofNullable(utilisateurRepository.findByEmail(email));
+        if (utilisateur.isEmpty()) {
 
+            response.put("message", "Utilisateur non trouvé ");
+            return response;
+        }
+        System.out.println("utilisateur trouvé");
+        Utilisateur utilisateur1 = utilisateur.get();
+        if (!utilisateur1.getMotDePasse().equals(motdepasse)) {
+            response.put("message", "Mot de passe incorrect.");
+            System.out.println("mot de passe incorrect");
+            return response;
+        }
+        System.out.println("mot de passe correct");
+        response.put("message", "Connexion réussie.");
+        return response;
+    }
 
 }
+
+
+
