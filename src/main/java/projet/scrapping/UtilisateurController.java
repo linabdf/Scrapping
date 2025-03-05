@@ -50,6 +50,7 @@ public class UtilisateurController {
                     utilisateurDTO.getMotDePasse()
             );
             if ("Connexion réussie.".equals(utilisateur.get("message"))) {
+
                 return ResponseEntity.ok(utilisateur);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(utilisateur);
