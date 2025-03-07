@@ -1,8 +1,9 @@
-/*package projet.scrapping;
+package projet.scrapping;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.*;
+import java.util.List;
 
 @Service
 public class ArticleService
@@ -10,8 +11,16 @@ public class ArticleService
 
     @Autowired
     private final ArticleRepository articleRepository;
+    @Autowired
     private final UtilisateurRepository utilisateurRepository;
+    @Autowired
+    public ArticleService( ArticleRepository articleRepository, UtilisateurRepository utilisateurRepository) {
 
+        this.articleRepository = articleRepository;
+        this.utilisateurRepository = utilisateurRepository;
+
+    }
+/*
     @Autowired
     public ArticleService(DatabaseManager dm, ArticleRepository articleRepository, UtilisateurRepository utilisateurRepository) {
         this.dm = dm;
@@ -128,6 +137,44 @@ public class ArticleService
             }
         }
     }
-
-}
 */
+@Transactional
+public void  insererArticle(String nomA, double Seuil, Utilisateur utilisateur, String notif, Integer frequence) {
+   Article article= new Article( nomA, Seuil, utilisateur,notif,frequence);
+
+    System.out.println("Article  à insérer : " + article);
+
+    try {
+     Article savedArticle = articleRepository.save(article);
+      articleRepository.flush();
+      System.out.println("Utilisateur inséré avec succès DANS LA BASE : " + savedArticle);
+        //  Utilisateur fetchedUtilisateur = utilisateurRepository.findByEmail("suusuusuusuus");
+
+        //System.out.println("Liste des utilisateur" + utilisateurs);
+            /*if (fetchedUtilisateur != null) {
+                System.out.println("Utilisateur récupéré : " + fetchedUtilisateur);
+            } else {
+                System.out.println("Utilisateur non trouvé dans la base de données.");
+            }*/
+        Utilisateur fetchedUtilisateur =utilisateurRepository.findByEmail("alexialexi@gmail.com");
+        // Vérifier si l'utilisateur existe
+        if (fetchedUtilisateur != null) {
+            System.out.println("Utilisateur trouvé : " + fetchedUtilisateur);
+
+            // Récupérer tous les articles associés à cet utilisateur
+            List<Article> articles = articleRepository.findByUtilisateur(fetchedUtilisateur);
+
+            // Afficher la liste des articles associés à cet utilisateur
+            System.out.println("Liste des articles de l'utilisateur :");
+            for (Article articl : articles) {
+                System.out.println(articl.getNomA()); // Afficher le nom de l'article
+            }
+        } else {
+            System.out.println("Utilisateur non trouvé avec l'e-mail : alexialexi@gmail.com");
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        System.out.println("Erreur lors de l'insertion de l'article.");
+    }
+}
+}

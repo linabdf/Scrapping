@@ -3,6 +3,7 @@ package projet.scrapping;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import  projet.scrapping.JwtUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,10 +17,11 @@ public class UtilisateurService {
 
     @Autowired
     private final UtilisateurRepository utilisateurRepository;
-
+    private  final JwtUtil jwtUtil;
     @Autowired
-    public UtilisateurService(UtilisateurRepository utilisateurRepository) {
+    public UtilisateurService(UtilisateurRepository utilisateurRepository, JwtUtil jwtUtil) {
         this.utilisateurRepository = utilisateurRepository;
+        this.jwtUtil = jwtUtil;
     }
 /*
     // Générer le prochain ID utilisateur
@@ -136,7 +138,7 @@ public class UtilisateurService {
             utilisateurRepository.flush();
             System.out.println("Utilisateur inséré avec succès DANS LA BASE : " + savedUtilisateur);
           //  Utilisateur fetchedUtilisateur = utilisateurRepository.findByEmail("suusuusuusuus");
-            //List<Utilisateur> utilisateurs = utilisateurRepository.findAll();
+            List<Utilisateur> utilisateurs = utilisateurRepository.findAll();
             //System.out.println("Liste des utilisateur" + utilisateurs);
             /*if (fetchedUtilisateur != null) {
                 System.out.println("Utilisateur récupéré : " + fetchedUtilisateur);
