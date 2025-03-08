@@ -139,24 +139,23 @@ public class ArticleService
     }
 */
 @Transactional
-public void  insererArticle(String nomA, double Seuil, Utilisateur utilisateur, String notif, Integer frequence) {
-   Article article= new Article( nomA, Seuil, utilisateur,notif,frequence);
 
-    System.out.println("Article  à insérer : " + article);
+public Article insererArticle(String nomA, double seuil, Utilisateur utilisateur, String notif, Integer frequence) {
+    // Création de l'objet Article
+    Article article = new Article(nomA, seuil, utilisateur, notif, frequence);
+
+    System.out.println("Article à insérer : " + article);
 
     try {
-     Article savedArticle = articleRepository.save(article);
-      articleRepository.flush();
-      System.out.println("Utilisateur inséré avec succès DANS LA BASE : " + savedArticle);
-        //  Utilisateur fetchedUtilisateur = utilisateurRepository.findByEmail("suusuusuusuus");
+        // Sauvegarde de l'article dans la base de données
+        Article savedArticle = articleRepository.save(article);  // Sauvegarde de l'article
+        articleRepository.flush(); // Forcer la synchronisation avec la base de données
 
-        //System.out.println("Liste des utilisateur" + utilisateurs);
-            /*if (fetchedUtilisateur != null) {
-                System.out.println("Utilisateur récupéré : " + fetchedUtilisateur);
-            } else {
-                System.out.println("Utilisateur non trouvé dans la base de données.");
-            }*/
-        Utilisateur fetchedUtilisateur =utilisateurRepository.findByEmail("alexialexi@gmail.com");
+        System.out.println("Article inséré avec succès dans la base : " + savedArticle);
+
+        // Recherche de l'utilisateur dans la base de données à partir de l'email
+        Utilisateur fetchedUtilisateur = utilisateurRepository.findByEmail(utilisateur.getEmail());
+
         // Vérifier si l'utilisateur existe
         if (fetchedUtilisateur != null) {
             System.out.println("Utilisateur trouvé : " + fetchedUtilisateur);
@@ -167,14 +166,23 @@ public void  insererArticle(String nomA, double Seuil, Utilisateur utilisateur, 
             // Afficher la liste des articles associés à cet utilisateur
             System.out.println("Liste des articles de l'utilisateur :");
             for (Article articl : articles) {
-                System.out.println(articl.getNomA()); // Afficher le nom de l'article
+                System.out.println(articl.getNomA());  // Afficher le nom de l'article
             }
         } else {
-            System.out.println("Utilisateur non trouvé avec l'e-mail : alexialexi@gmail.com");
+            System.out.println("Utilisateur non trouvé avec l'e-mail : " + utilisateur.getEmail());
         }
+
+        // Retourner l'article inséré
+        return savedArticle;
+
     } catch (Exception e) {
         e.printStackTrace();
         System.out.println("Erreur lors de l'insertion de l'article.");
+        return null;  // En cas d'erreur, retourner null ou gérer l'exception selon votre logique.
     }
+}
+
+public  List<Article>getArticlesByUtilisateur(Utilisateur utilisateur){
+    return articleRepository.findByUtilisateur(utilisateur);
 }
 }

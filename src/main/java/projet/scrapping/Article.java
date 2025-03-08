@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.security.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name="article")
@@ -38,6 +39,9 @@ public class Article {
     private  String urlImage;
     @Column(name="derniereupdate")
     private Timestamp derniereupdate;
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    @Column(name="selectedSites")
+    private List<Site> sites;  // Liste des sites associés à cet article
 
     public Article( String nomA, double Seuil, Utilisateur utilisateur,String notif,Integer frequence){
 
@@ -98,5 +102,11 @@ public class Article {
         return false;
     }
     // Méthode setter pour associer un utilisateur à l'article
+    public List<Site> getSites() {
+        return sites;
+    }
 
+    public void setSites(List<Site> sites) {
+        this.sites = sites;
+    }
 }

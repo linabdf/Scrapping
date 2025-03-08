@@ -1,29 +1,70 @@
-/*package projet.scrapping;
+package projet.scrapping;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="Site")
+@Table(name = "site")
 public class Site {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
-    private String numS;
-    @Column(name="urlarticle")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer numS;
+
+    @Column(name = "urlarticle")
+    @JsonProperty("urlArticle")  // Assurez-vous que le JSON utilise cette propriété
     private String urlArticle;
-    @Column(name="nomSite")
+
+    @Column(name = "nomSite")
+    @JsonProperty("nomSite")  // Assurez-vous que le JSON utilise cette propriété
     private String nomSite;
+
+    // Relation ManyToOne avec Article
     @ManyToOne
-    @JoinColumn(name = "numA",referencedColumnName = "numA")
-    private Article  Article ;
-    public  Site(String urlArticle,String nomSite,Article Article ){
-         this.urlArticle=urlArticle;
-         this.nomSite=nomSite;
-         this.Article=Article;
+    @JoinColumn(name = "numA", referencedColumnName = "numA")  // La clé étrangère vers l'article
+    private Article article;
+
+    // Constructeur par défaut
+    public Site() {
     }
-    public String getNumS(){
-         return numS;
+
+    // Constructeur avec paramètres
+    public Site(String urlArticle, String nomSite, Article article) {
+        this.urlArticle = urlArticle;
+        this.nomSite = nomSite;
+        this.article = article;
     }
-    public void setNumS(String numS){
-         this.numS=numS;
+
+    // Getters et Setters
+    public Integer getNumS() {
+        return numS;
     }
-}*/
+
+    public void setNumS(Integer numS) {
+        this.numS = numS;
+    }
+
+    public String getUrlArticle() {
+        return urlArticle;
+    }
+
+    public void setUrlArticle(String urlArticle) {
+        this.urlArticle = urlArticle;
+    }
+
+    public String getNomSite() {
+        return nomSite;
+    }
+
+    public void setNomSite(String nomSite) {
+        this.nomSite = nomSite;
+    }
+
+    public Article getArticle() {
+        return article;
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
+    }
+}
